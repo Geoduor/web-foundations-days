@@ -1,0 +1,62 @@
+:root {
+    --background-color: white;
+    --text-color: black;
+    --input-background: #f5f5f5;
+    --border-color: #cccccc;
+    --button-background: #222222;
+    --button-text: white;
+}
+
+body.dark {
+    --background-color: #222222;
+    --text-color: white;
+    --input-background: #333333;
+    --border-color: #666666;
+    --button-background: white;
+    --button-text: black;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 10px;
+
+    background-color: var(--input-background);
+    color: var(--text-color);
+
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    resize: vertical;
+}
+
+button {
+    padding: 10px 15px;
+    margin-right: 10px;
+
+    background-color: var(--button-background);
+    color: var(--button-text);
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.warning {
+    color: orange;
+}
+
+.over {
+    color: red;
+    font-weight: bold;
+}
