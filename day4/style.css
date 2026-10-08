@@ -20,8 +20,7 @@ body {
     background-color: var(--background-color);
     color: var(--text-color);
     font-family: Arial, sans-serif;
-    max-width: 700px;
-    margin: 40px auto;
+    margin: 40px;
     padding: 20px;
 }
 
