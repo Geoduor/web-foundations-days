@@ -27,8 +27,9 @@ CREATE TABLE enrolments (
     UNIQUE (student_id, course_id)
 );
 
--- Optional Performance Index on foreign key for faster lookups
+-- Indexes for performance optimization on foreign keys
 CREATE INDEX idx_enrolments_student_id ON enrolments(student_id);
+CREATE INDEX idx_enrolments_course_id ON enrolments(course_id);
 
 -- 2. Insert Sample Data
 -- Add 3 students
