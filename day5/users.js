@@ -1,3 +1,6 @@
+const USERS_URL = 'https://jsonplaceholder.typicode.com/users';
+
+// Users loaded from the API are stored here, so filtering never needs a new request.
 let allUsers = [];
 
 const loadUsersBtn = document.getElementById('load-users');
@@ -11,42 +14,41 @@ filterInput.addEventListener('input', handleFilter);
 async function loadUsers() {
     loadUsersBtn.disabled = true;
     statusEl.textContent = 'Loading users...';
-    usersListEl.innerHTML = '';
+    usersListEl.replaceChildren();
 
     try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users');
-        
+        const response = await fetch(USERS_URL);
+
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         allUsers = await response.json();
-        statusEl.textContent = `Successfully loaded ${allUsers.length} users.`;
-        renderUsers(allUsers);
+
+        // Respect any text already typed in the filter box.
+        renderUsers(getFilteredUsers());
+        statusEl.textContent = `Loaded ${allUsers.length} users successfully.`;
     } catch (error) {
-        statusEl.textContent = `Error: Failed to load users. Please try again later.`;
+        allUsers = [];
+        statusEl.textContent = 'Error: could not load users. Please try again.';
         console.error('Fetch error:', error);
     } finally {
         loadUsersBtn.disabled = false;
     }
 }
 
-function renderUsers(users) {
-    usersListEl.innerHTML = '';
+function renderUsers(list) {
+    usersListEl.replaceChildren();
 
-    if (users.length === 0) {
-        statusEl.textContent = 'No users match your filter.';
-        return;
-    }
-
-    users.forEach(user => {
+    list.forEach((user) => {
         const li = document.createElement('li');
 
         const nameEl = document.createElement('strong');
         nameEl.textContent = user.name;
 
         const detailsEl = document.createElement('p');
-        detailsEl.textContent = `Email: ${user.email} | City: ${user.address.city} | Company: ${user.company.name}`;
+        detailsEl.textContent =
+            `Email: ${user.email} | City: ${user.address.city} | Company: ${user.company.name}`;
 
         li.appendChild(nameEl);
         li.appendChild(detailsEl);
@@ -54,12 +56,21 @@ function renderUsers(users) {
     });
 }
 
-function handleFilter() {
-    const query = filterInput.value.toLowerCase().trim();
-    
-    const filtered = allUsers.filter(user => 
-        user.name.toLowerCase().includes(query)
-    );
+function getFilteredUsers() {
+    const query = filterInput.value.trim().toLowerCase();
+    return allUsers.filter((user) => user.name.toLowerCase().includes(query));
+}
 
+function handleFilter() {
+    // Nothing to filter until users have been loaded successfully.
+    if (allUsers.length === 0) {
+        return;
+    }
+
+    const filtered = getFilteredUsers();
     renderUsers(filtered);
+
+    statusEl.textContent = filtered.length === 0
+        ? 'No users match your filter.'
+        : `Showing ${filtered.length} of ${allUsers.length} users.`;
 }
